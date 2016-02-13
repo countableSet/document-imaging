@@ -4,7 +4,7 @@ A set of scripts that can be used to acquire and archive scanned documents.
 
 ## Requirements
 
-Install `imagemagick` on Ubuntu.
+Install `imagemagick` and `libtiff-tools` on Ubuntu.
 
 ## Setup
 1. Run `scanimage -L`
