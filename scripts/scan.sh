@@ -29,6 +29,18 @@ do
 done
 
 ############################
+# read pdf file name from user
+
+read -p "Enter pdf filename, no extension: " answer
+
+if [ -z "$answer" ]; then
+  answer=`date +"%Y%m%d%H%M%S"`
+fi
+
+############################
+# convert tiff files into new tiff files
+
+echo "Converting tiff files into scan files"
 
 SCANCOUNTER=1
 PREFIX="scan"
@@ -41,16 +53,22 @@ do
   convert $file -deskew 40% -background white -level 10%,70%,1 -blur 2 +dither +repage +matte -compress Group4 -colorspace gray -format tiff $outputfilename
 done
 
+echo "Convert Done"
+
 ############################
+# create final pdf document
 
-read -p "Enter pdf filename, no extension: " answer
-
-if [ -z "$answer" ]; then
-  answer=`date +"%Y%m%d%H%M%S"`
-fi
+echo "Converting tiff scans to pdf"
 
 tiffcp scan???.tiff doc.tiff
 tiff2pdf -j -o "$answer.pdf" doc.tiff
+
+if [ $? != 0 ]; then
+  echo "Convert Failed. Exiting."
+  exit 1
+fi
+
+echo "Convert Done"
 
 ############################
 # remove intermedite files
@@ -63,3 +81,5 @@ do
   rm -f $i
 done
 rm -f doc.tiff
+
+echo "Cleanup Done"
