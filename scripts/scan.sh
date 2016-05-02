@@ -19,7 +19,7 @@ do
             filename+=".tiff"
             FILES+=($filename)
 
-            scanimage --device-name 'genesys:libusb:001:006' --mode Color --resolution 300 -x 215.9 -y 279.4 --format=tiff -p > $filename
+            scanimage --device-name 'genesys:libusb:001:011' --mode Color --resolution 300 -x 215.9 -y 279.4 --format=tiff -p > $filename
             ;;
     [nN]* ) break;;
     * ) ;;
@@ -31,11 +31,22 @@ done
 ############################
 # read pdf file name from user
 
-read -p "Enter pdf filename, no extension: " answer
+read -e -p "Enter pdf filename, no extension: " pdffilename
 
-if [ -z "$answer" ]; then
-  answer=`date +"%Y%m%d%H%M%S"`
-fi
+while true 
+do
+  # if blank pick default name of date
+  if [ -z "$pdffilename" ]; then
+    pdffilename=`date +"%Y%m%d%H%M%S"`
+  fi
+
+  # do not overwrite file break if it does not exist
+  if [ ! -f "$pdffilename.pdf" ]; then 
+    break
+  fi
+
+  read -e -p "File already exists, pick another: " pdffilename
+done
 
 ############################
 # convert tiff files into new tiff files
@@ -61,7 +72,7 @@ echo "Convert Done"
 echo "Converting tiff scans to pdf"
 
 tiffcp scan???.tiff doc.tiff
-tiff2pdf -j -o "$answer.pdf" doc.tiff
+tiff2pdf -j -o "$pdffilename.pdf" doc.tiff
 
 if [ $? != 0 ]; then
   echo "Convert Failed. Exiting."
