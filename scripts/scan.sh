@@ -49,6 +49,21 @@ do
 done
 
 ############################
+# check and append date to filename
+
+DATE_REGEX="^([0-9]{8}|[0-9]{4}(-[0-9]{2}){2}).*"
+
+if ! [[ $pdffilename =~ $DATE_REGEX ]]; then
+  originalfilename=$pdffilename
+  pdffilename=`date +"%Y-%m-%d_"`
+  pdffilename+=$originalfilename
+fi
+
+text="Filename did not include a date, the new filename is "
+text+=$pdffilename
+echo $text
+
+############################
 # convert tiff files into new tiff files
 
 echo "Converting tiff files into scan files"
