@@ -10,7 +10,7 @@ answer="y"
 while true
 do
   case $answer in
-    [yY]* ) text="Scaning page "
+    [yY]*|"" ) text="Scaning page "
             text+=$PAGECOUNTER
             echo $text
             PAGECOUNTER=$[$PAGECOUNTER+1]
@@ -19,13 +19,13 @@ do
             filename+=".tiff"
             FILES+=($filename)
 
-            scanimage --device-name 'genesys:libusb:001:011' --mode Color --resolution 300 -x 215.9 -y 279.4 --format=tiff -p > $filename
+            scanimage --device-name 'genesys:libusb:001:008' --mode Color --resolution 300 -x 215.9 -y 279.4 --format=tiff -p > $filename
             ;;
     [nN]* ) break;;
     * ) ;;
   esac
 
-  read -p "Scan more pages? [y/n] " answer
+  read -p "Scan more pages? [Y/n] " answer
 done
 
 ############################
@@ -33,7 +33,7 @@ done
 
 read -e -p "Enter pdf filename, no extension: " pdffilename
 
-while true 
+while true
 do
   # if blank pick default name of date
   if [ -z "$pdffilename" ]; then
@@ -41,7 +41,7 @@ do
   fi
 
   # do not overwrite file break if it does not exist
-  if [ ! -f "$pdffilename.pdf" ]; then 
+  if [ ! -f "$pdffilename.pdf" ]; then
     break
   fi
 
