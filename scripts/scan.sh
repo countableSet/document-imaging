@@ -57,11 +57,11 @@ if ! [[ $pdffilename =~ $DATE_REGEX ]]; then
   originalfilename=$pdffilename
   pdffilename=`date +"%Y-%m-%d_"`
   pdffilename+=$originalfilename
-fi
 
-text="Filename did not include a date, the new filename is "
-text+=$pdffilename
-echo $text
+  text="Filename did not include a date, the new filename is "
+  text+=$pdffilename
+  echo $text
+fi
 
 ############################
 # convert tiff files into new tiff files
