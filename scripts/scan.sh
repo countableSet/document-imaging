@@ -19,7 +19,7 @@ do
             filename+=".tiff"
             FILES+=($filename)
 
-            scanimage --device-name 'genesys:libusb:001:008' --mode Color --resolution 300 -x 215.9 -y 279.4 --format=tiff -p > $filename
+            scanimage --device-name 'genesys:libusb:001:010' --mode Color --resolution 300 -x 215.9 -y 279.4 --format=tiff -p > $filename
             ;;
     [nN]* ) break;;
     * ) ;;
@@ -51,7 +51,7 @@ done
 ############################
 # check and append date to filename
 
-DATE_REGEX="^([0-9]{8}|[0-9]{4}(-[0-9]{2}){2}).*"
+DATE_REGEX="^([0-9]{4}(-[0-9]{2}){1,2}).*"
 
 if ! [[ $pdffilename =~ $DATE_REGEX ]]; then
   originalfilename=$pdffilename
