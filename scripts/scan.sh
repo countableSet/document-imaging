@@ -19,7 +19,7 @@ do
             filename+=".tiff"
             FILES+=($filename)
 
-            scanimage --device-name 'genesys:libusb:001:010' --mode Color --resolution 300 -x 215.9 -y 279.4 --format=tiff -p > $filename
+            scanimage --device-name 'genesys:libusb:001:011' --mode Color --resolution 300 -x 215.9 -y 279.4 --format=tiff -p > $filename
             ;;
     [nN]* ) break;;
     * ) ;;
@@ -31,6 +31,8 @@ done
 ############################
 # read pdf file name from user
 
+DATE_REGEX="^([0-9]{4}(-[0-9]{2}){1,2}).*"
+
 read -e -p "Enter pdf filename, no extension: " pdffilename
 
 while true
@@ -40,6 +42,17 @@ do
     pdffilename=`date +"%Y%m%d%H%M%S"`
   fi
 
+  # check and append date to filename
+  if ! [[ $pdffilename =~ $DATE_REGEX ]]; then
+    originalfilename=$pdffilename
+    pdffilename=`date +"%Y-%m-%d_"`
+    pdffilename+=$originalfilename
+
+    text="Filename did not include a date, the new filename is "
+    text+=$pdffilename
+    echo $text
+  fi
+
   # do not overwrite file break if it does not exist
   if [ ! -f "$pdffilename.pdf" ]; then
     break
@@ -47,21 +60,6 @@ do
 
   read -e -p "File already exists, pick another: " pdffilename
 done
-
-############################
-# check and append date to filename
-
-DATE_REGEX="^([0-9]{4}(-[0-9]{2}){1,2}).*"
-
-if ! [[ $pdffilename =~ $DATE_REGEX ]]; then
-  originalfilename=$pdffilename
-  pdffilename=`date +"%Y-%m-%d_"`
-  pdffilename+=$originalfilename
-
-  text="Filename did not include a date, the new filename is "
-  text+=$pdffilename
-  echo $text
-fi
 
 ############################
 # convert tiff files into new tiff files
