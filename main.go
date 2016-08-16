@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"errors"
 )
 
 var (
@@ -21,7 +22,8 @@ var (
 )
 
 func main() {
-	startScanning()
+	id := fetchScannerIdFromConfig()
+	startScanning(id)
 	filename := promptForFilename(os.Stdin)
 	convertFilesIntoNewTiffFiles()
 	createFinalPdfDocument(filename)
@@ -29,17 +31,40 @@ func main() {
 }
 
 func runCommand(cmd *exec.Cmd) {
+	err := runCommandWithReturnedError(cmd)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error running command: ", err)
+		os.Exit(1)
+	}
+}
+
+func runCommandWithOutput(cmd *exec.Cmd) string {
 	fmt.Println(strings.Join(cmd.Args, " "))
 	var stderr bytes.Buffer
+	var stdout bytes.Buffer
 	cmd.Stderr = &stderr
+	cmd.Stdout = &stdout
 	err := cmd.Run()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error running command: ", err, ": ", stderr.String())
 		os.Exit(1)
 	}
+	return stdout.String()
 }
 
-func startScanning() {
+func runCommandWithReturnedError(cmd *exec.Cmd) error {
+	fmt.Println(strings.Join(cmd.Args, " "))
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	if err != nil {
+		err = errors.New(stderr.String())
+	}
+	return err
+}
+
+func startScanning(id string) {
+	deviceName := "--device-name '" + id + "'"
 	r := os.Stdin
 	continue_scanning := true
 	page_counter := 1
@@ -51,11 +76,18 @@ func startScanning() {
 		files = append(files, filename)
 
 		scanimage_args := []string{
-			"scanimage", "--device-name 'genesys:libusb:001:011'", "--mode Color",
+			"scanimage", deviceName, "--mode Color",
 			"--resolution 300 -x 215.9 -y 279.4", "--format=tiff", "-p", ">", filename,
 		}
 		cmd := exec.Command("bash", "-c", strings.Join(scanimage_args, " "))
-		runCommand(cmd)
+		err := runCommandWithReturnedError(cmd)
+		if err != nil {
+			result, newId := verifyScanCommandOutput(err.Error())
+			if !result {
+				deviceName = "--device-name '" + newId + "'"
+				continue
+			}
+		}
 
 		continue_scanning = promptUser(r)
 		page_counter++
@@ -109,7 +141,7 @@ func verifyFileNotExist(filename string) bool {
 		// file does not already exist
 		return true
 	}
-	fmt.Printf("File already exists, with nanme %s.pdf pick another\n", filename)
+	fmt.Printf("File already exists, with name %s.pdf pick another\n", filename)
 	return false
 }
 
