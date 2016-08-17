@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -10,7 +11,6 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"errors"
 )
 
 var (
@@ -39,7 +39,6 @@ func runCommand(cmd *exec.Cmd) {
 }
 
 func runCommandWithOutput(cmd *exec.Cmd) string {
-	fmt.Println(strings.Join(cmd.Args, " "))
 	var stderr bytes.Buffer
 	var stdout bytes.Buffer
 	cmd.Stderr = &stderr
@@ -53,7 +52,6 @@ func runCommandWithOutput(cmd *exec.Cmd) string {
 }
 
 func runCommandWithReturnedError(cmd *exec.Cmd) error {
-	fmt.Println(strings.Join(cmd.Args, " "))
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	err := cmd.Run()
