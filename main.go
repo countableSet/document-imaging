@@ -22,6 +22,7 @@ var (
 )
 
 func main() {
+	flagParsing()
 	id := fetchScannerIdFromConfig()
 	startScanning(id)
 	filename := promptForFilename(os.Stdin)
