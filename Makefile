@@ -2,6 +2,8 @@ PROJECT=document-imaging
 PACKAGE_VERSION=0.1.0
 PACKAGE_BASEDIR=package
 PACKAGE_DIR=${PACKAGE_BASEDIR}/${PROJECT}
+PACKAGE_DATE:=$(shell date +"%a, %d %b %Y %k:%M:%S %z")
+PACKAGE_COMMITS:=$(shell git log --pretty=format:"  * %h %s\n" 6c04c5a35d9b90058ec78be8e5f8d2faf302a834..HEAD | tr -d '\n')
 
 COMMIT_HASH=`git rev-parse --short HEAD 2>/dev/null`
 BUILD_DATE=`date +%FT%T%z`
@@ -20,6 +22,8 @@ package: fmt test build
 	mv ${PACKAGE_DIR}/debian/changelog.ex ${PACKAGE_DIR}/debian/changelog
 	sed -i 's/<name>/${PROJECT}/g' ${PACKAGE_DIR}/debian/control
 	sed -i 's/<version>/${PACKAGE_VERSION}/g' ${PACKAGE_DIR}/debian/changelog
+	sed -i 's/<changes>/${PACKAGE_COMMITS}/g' ${PACKAGE_DIR}/debian/changelog
+	sed -i 's/<date>/${PACKAGE_DATE}/g' ${PACKAGE_DIR}/debian/changelog
 	cp ${PROJECT} ${PACKAGE_DIR}
 	cd ${PACKAGE_DIR} && debuild -us -uc -b
 
