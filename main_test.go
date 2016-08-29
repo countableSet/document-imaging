@@ -103,6 +103,31 @@ func TestVerifyFileNotExist(t *testing.T) {
 	}
 }
 
+func TestParseTitleAndDate(t *testing.T) {
+	var tests = []struct {
+		input         string
+		expectedTitle string
+		expectedDate  string
+	}{
+		{"2016-01-01_Test file", "Test file", "2016-01-01"},
+		{"2016-01-01 Test file", "Test file", "2016-01-01"},
+		{"2016-01-01-Test file", "Test file", "2016-01-01"},
+		{"2016-01-01Test file", "Test file", "2016-01-01"},
+		{"2016-01_Test file", "Test file", "2016-01"},
+		{"2016-01-Test file", "Test file", "2016-01"},
+		{"2016-01 Test file", "Test file", "2016-01"},
+	}
+	for _, test := range tests {
+		resultTitle, resultDate := parseTitleAndDate(test.input)
+		if resultTitle != test.expectedTitle {
+			t.Errorf("Expected %s but got %s", test.expectedTitle, resultTitle)
+		}
+		if resultDate != test.expectedDate {
+			t.Errorf("Expected %s but got %s", test.expectedDate, resultDate)
+		}
+	}
+}
+
 func helperCreateExistingTestFiles(files []string) {
 	for _, file := range files {
 		cmd := exec.Command("bash", "-c", "touch "+file)

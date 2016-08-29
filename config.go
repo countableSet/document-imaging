@@ -13,12 +13,14 @@ import (
 )
 
 var (
-	configLocation  = ".config" + string(os.PathSeparator) + "document-imaging" + string(os.PathSeparator) + "scanner.json"
-	configPath      = ".config" + string(os.PathSeparator) + "document-imaging"
-	conf            = &config{}
-	scanImageCmd    = exec.Command("scanimage", "-L")
-	scanImageRe     = regexp.MustCompile("^device `(?P<name>.*)'")
-	scanImageFailRe = regexp.MustCompile("^scanimage: open of device (.*) failed")
+	configLocation   = ".config" + string(os.PathSeparator) + "document-imaging" + string(os.PathSeparator) + "scanner.json"
+	configPath       = ".config" + string(os.PathSeparator) + "document-imaging"
+	metadataLocation = ".config" + string(os.PathSeparator) + "document-imaging" + string(os.PathSeparator) + "metadata.json"
+	conf             = &config{}
+	meta             = &metadata{}
+	scanImageCmd     = exec.Command("scanimage", "-L")
+	scanImageRe      = regexp.MustCompile("^device `(?P<name>.*)'")
+	scanImageFailRe  = regexp.MustCompile("^scanimage: open of device (.*) failed")
 )
 
 // Config struct to store scanner id information
@@ -28,16 +30,25 @@ type config struct {
 	ScannerId string `json:"scannerId"`
 }
 
+// Metadata struct to store pdf metadata information
+// should look something like
+// { author: "rachel" }
+type metadata struct {
+	Author string `json:"author"`
+}
+
 // Fetches the scanner id from the config file, if the id is empty, fetch the id from the command and return that
 func fetchScannerIdFromConfig() string {
 	usr, _ := user.Current()
 	configFile := usr.HomeDir + string(os.PathSeparator) + configLocation
-	load(configFile)
+	load(configFile, conf)
+	configFile = usr.HomeDir + string(os.PathSeparator) + metadataLocation
+	load(configFile, meta)
 	return verifyConfig()
 }
 
 // Load the JSON config file from the provided path, and unmarshal into conf object
-func load(configFile string) {
+func load(configFile string, i interface{}) {
 	var err error
 	var input = io.ReadCloser(os.Stdin)
 	if input, err = os.Open(configFile); err != nil {
@@ -53,7 +64,7 @@ func load(configFile string) {
 	}
 
 	// Parse the config
-	if err := json.Unmarshal(jsonBytes, &conf); err != nil {
+	if err := json.Unmarshal(jsonBytes, &i); err != nil {
 		log.Fatalln("Could not parse %q: %v", configFile, err)
 	}
 }
@@ -81,7 +92,7 @@ func fetchScannerId() string {
 	matches := scanImageRe.FindAllStringSubmatch(output, -1)[0]
 	match := matches[1]
 	conf.ScannerId = match
-	writeConfigToFile()
+	writeConfigToFile(configLocation, conf)
 	return match
 }
 
@@ -97,8 +108,8 @@ func verifyScanCommandOutput(output string) (bool, string) {
 }
 
 // Write the conf object to the config file in json format for reference
-func writeConfigToFile() {
-	jsonOutput, err := json.Marshal(conf)
+func writeConfigToFile(fileLocation string, i interface{}) {
+	jsonOutput, err := json.Marshal(i)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Cannot marshal config json!", err)
 		os.Exit(1)
@@ -110,7 +121,7 @@ func writeConfigToFile() {
 		fmt.Fprintln(os.Stderr, "Error create path directories!", err)
 		os.Exit(1)
 	}
-	configFile := usr.HomeDir + string(os.PathSeparator) + configLocation
+	configFile := usr.HomeDir + string(os.PathSeparator) + fileLocation
 	err = ioutil.WriteFile(configFile, jsonOutput, 0666)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error writing to config json file!", err)

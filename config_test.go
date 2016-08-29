@@ -13,7 +13,7 @@ func TestLoad(t *testing.T) {
 	defer func() {
 		os.Remove(location)
 	}()
-	load(location)
+	load(location, conf)
 	if conf.ScannerId != "" {
 		t.Errorf("Expected not nil but got %s", conf.ScannerId)
 	}
@@ -21,7 +21,7 @@ func TestLoad(t *testing.T) {
 	testConf := config{ScannerId: id}
 	jsonOutput, _ := json.Marshal(testConf)
 	ioutil.WriteFile(location, jsonOutput, 0666)
-	load(location)
+	load(location, conf)
 	if conf.ScannerId != id {
 		t.Errorf("Expected %s but got %s", id, conf.ScannerId)
 	}
@@ -36,27 +36,27 @@ func TestWriteConfigToFile(t *testing.T) {
 		os.Remove(location)
 	}()
 	conf.ScannerId = ""
-	writeConfigToFile()
+	writeConfigToFile(configLocation, conf)
 	if _, err := os.Stat(location); os.IsNotExist(err) {
 		t.Errorf("Expected path to exist %s", location)
 	}
 	if conf.ScannerId != "" {
 		t.Errorf("Expected empty string but got %s", conf.ScannerId)
 	}
-	load(location)
+	load(location, conf)
 	if conf.ScannerId != "" {
 		t.Errorf("Expected empty string but got %s", conf.ScannerId)
 	}
 	id := "test"
 	conf.ScannerId = id
-	writeConfigToFile()
+	writeConfigToFile(configLocation, conf)
 	if _, err := os.Stat(location); os.IsNotExist(err) {
 		t.Errorf("Expected path to exist %s", location)
 	}
 	if conf.ScannerId != id {
 		t.Errorf("Expected %s but got %s", id, conf.ScannerId)
 	}
-	load(location)
+	load(location, conf)
 	if conf.ScannerId != id {
 		t.Errorf("Expected %s but got %s", id, conf.ScannerId)
 	}

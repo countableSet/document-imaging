@@ -18,7 +18,8 @@ var (
 	scanfiles []string
 	yesre     = regexp.MustCompile("y(es)?")
 	nore      = regexp.MustCompile("n(o)?")
-	datere    = regexp.MustCompile("^([0-9]{4}(-[0-9]{2}){1,2}).*")
+	datere    = regexp.MustCompile("^([0-9]{4}(-[0-9]{2}){1,2})(.*)")
+	titlere   = regexp.MustCompile("^(_|-|\\s|\\.)(.*)")
 )
 
 func main() {
@@ -167,9 +168,25 @@ func createFinalPdfDocument(filename string) {
 	scanfiles = append(scanfiles, "doc.tiff")
 	cmd := exec.Command("tiffcp", scanfiles...)
 	runCommand(cmd)
-	cmd = exec.Command("tiff2pdf", "-j", "-o", pdfName, "doc.tiff")
+	title, _ := parseTitleAndDate(filename)
+	pdfArgs := []string{"-j", "-t", title, "-k", "scan"}
+	if meta.Author != "" {
+		pdfArgs = append(pdfArgs, "-c", meta.Author, "-a", meta.Author)
+	}
+	pdfArgs = append(pdfArgs, "-o", pdfName, "doc.tiff")
+	cmd = exec.Command("tiff2pdf", pdfArgs...)
 	runCommand(cmd)
 	fmt.Println("Convert Done")
+}
+
+func parseTitleAndDate(filename string) (string, string) {
+	matches := datere.FindAllStringSubmatch(filename, -1)[0]
+	title := matches[3]
+	date := matches[1]
+	if titlere.MatchString(title) {
+		title = titlere.FindAllStringSubmatch(title, -1)[0][2]
+	}
+	return title, date
 }
 
 func removeIntermediateFiles() {
