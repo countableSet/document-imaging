@@ -152,9 +152,10 @@ func convertFilesIntoNewTiffFiles() {
 		scanfiles = append(scanfiles, output_filename)
 
 		command_string := []string{
-			"convert", file, "-deskew 40%", "-background white", "-level 10%,70%,1",
-			"-blur 2", "+dither", "+repage", "+matte", "-compress Group4", "-colorspace gray",
-			"-format tiff", output_filename,
+			"convert", file, "-shave 15x15 -bordercolor white -border 15",
+			"-deskew 40%", "-background white", "-level 10%,70%,1",
+			"-blur 2", "+dither", "+repage", "+matte", "-compress Group4",
+			"-colorspace gray", "-format tiff", output_filename,
 		}
 		cmd := exec.Command("bash", "-c", strings.Join(command_string, " "))
 		runCommand(cmd)
