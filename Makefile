@@ -1,5 +1,5 @@
 PROJECT=document-imaging
-PACKAGE_VERSION=0.1.0
+PACKAGE_VERSION=0.2.0
 PACKAGE_BASEDIR=package
 PACKAGE_DIR=${PACKAGE_BASEDIR}/${PROJECT}
 PACKAGE_DATE:=$(shell date +"%a, %d %b %Y %k:%M:%S %z")
@@ -26,6 +26,7 @@ package: fmt test build
 	sed -i 's/<date>/${PACKAGE_DATE}/g' ${PACKAGE_DIR}/debian/changelog
 	cp ${PROJECT} ${PACKAGE_DIR}
 	cd ${PACKAGE_DIR} && debuild -us -uc -b
+	tar -czf ${PACKAGE_BASEDIR}/${PROJECT}-${PACKAGE_VERSION}-linux-amd64.tar.gz ${PROJECT}
 
 fmt:
 	go fmt

@@ -1,5 +1,5 @@
 Source: <name>
-Maintainer: countableset <rachel@countableset.com>
+Maintainer: countableset <r@countableset.com>
 
 Package: <name>
 Architecture: amd64
