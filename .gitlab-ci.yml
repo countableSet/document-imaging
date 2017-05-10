@@ -1,8 +1,6 @@
 image: golang:latest
 
 before_script:
-    - apt-get update
-    - apt-get install -y devscripts build-essential
     - mkdir -p /go/src/gitlab.com/countableset/document-imaging
     - cp -r /builds/countableset/document-imaging/ /go/src/gitlab.com/countableset/
     - cd /go/src/gitlab.com/countableset/document-imaging
@@ -18,4 +16,6 @@ default:
 package:
     stage: build
     script:
+        - apt-get update
+        - apt-get install -y devscripts build-essential
         - make package
