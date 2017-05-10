@@ -1,0 +1,20 @@
+image: golang:latest
+
+before_script:
+    - mkdir -p /go/src/gitlab.com/countableset/document-imaging
+    - cp -r /builds/countableset/document-imaging/ /go/src/gitlab.com/countableset/
+    - cd /go/src/gitlab.com/countableset/document-imaging
+
+stages:
+    - default
+    - package
+
+default:
+    stage: default
+    script:
+        - make
+
+package:
+    stage: package
+    script:
+        - make package
