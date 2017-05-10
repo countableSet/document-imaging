@@ -1,20 +1,21 @@
 image: golang:latest
 
 before_script:
+    - apt-get update
+    - apt-get install -y build-essential
     - mkdir -p /go/src/gitlab.com/countableset/document-imaging
     - cp -r /builds/countableset/document-imaging/ /go/src/gitlab.com/countableset/
     - cd /go/src/gitlab.com/countableset/document-imaging
 
 stages:
-    - default
-    - package
+    - build
 
 default:
-    stage: default
+    stage: build
     script:
         - make
 
 package:
-    stage: package
+    stage: build
     script:
         - make package
