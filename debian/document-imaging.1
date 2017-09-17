@@ -1,0 +1,20 @@
+.\" Manpage for document-imaging.
+.\" Contact r@countableset.com to correct errors or typos.
+.TH document-imaging 1 "16 Sept 2017" "document-imaging <deb-version>" "document-imaging Manual"
+.SH NAME
+document-imaging \- scan new documents
+.SH SYNOPSIS
+document-imaging [-v] [-a <author>]
+.SH DESCRIPTION
+document-imaging is utility to make scanning easier. It finds and configures the scanner for you and prompts for continuous pages. Once stopped by the users' response to the prompt for more pages, it then converts the intermediate tiff images to pdfs and cleans up any intermediate files.
+.SH OPTIONS
+.IP -v
+Prints the program name, version, build date, and commit hash.
+.IP "-a <author>"
+Uses the given author to set the author metadata.
+.SH SEE ALSO
+scanimage(1), convert(1), tiff2pdf(1)
+.SH BUGS
+See repository issue tracker https://gitlab.com/countableset/document-imaging/issues
+.SH AUTHOR
+countableset (r@countableset.com)

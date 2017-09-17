@@ -24,6 +24,7 @@ package: fmt test build
 	sed -i 's/<version>/${PACKAGE_VERSION}/g' ${PACKAGE_DIR}/debian/changelog
 	sed -i 's/<changes>/${PACKAGE_COMMITS}/g' ${PACKAGE_DIR}/debian/changelog
 	sed -i 's/<date>/${PACKAGE_DATE}/g' ${PACKAGE_DIR}/debian/changelog
+	sed -i 's/<deb-version>/${PACKAGE_VERSION}/g' ${PACKAGE_DIR}/debian/${PROJECT}.1
 	cp ${PROJECT} ${PACKAGE_DIR}
 	cd ${PACKAGE_DIR} && debuild -us -uc -b
 	tar -czf ${PACKAGE_BASEDIR}/${PROJECT}-${PACKAGE_VERSION}-linux-amd64.tar.gz ${PROJECT}

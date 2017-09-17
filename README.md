@@ -19,4 +19,4 @@ Now that you have document-imaging installed on your system. It's time to step t
 
 ## Development Requirements
 
-Install `imagemagick`, `libtiff-tools`, and `sane-utils` on Ubuntu.
+Install `imagemagick`, `libtiff-tools`, `sane-utils`, `devscripts`, and `dh-make` on Ubuntu.
