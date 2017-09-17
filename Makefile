@@ -1,9 +1,9 @@
 PROJECT=document-imaging
-PACKAGE_VERSION=0.2.0
+PACKAGE_VERSION=0.3.0
 PACKAGE_BASEDIR=package
 PACKAGE_DIR=${PACKAGE_BASEDIR}/${PROJECT}
 PACKAGE_DATE:=$(shell date +"%a, %d %b %Y %k:%M:%S %z")
-PACKAGE_COMMITS:=$(shell git log --pretty=format:"  * %h %s\n" 6c04c5a35d9b90058ec78be8e5f8d2faf302a834..HEAD | tr -d '\n')
+PACKAGE_COMMITS:=$(shell git log --pretty=format:"  * %h %s\n" b46555bcf104e90c8b79e67a27d3cd9a7353c20f..HEAD | tr -d '\n')
 
 COMMIT_HASH=`git rev-parse --short HEAD 2>/dev/null`
 BUILD_DATE=`date +%FT%T%z`
