@@ -103,6 +103,7 @@ func verifyScanCommandOutput(output string) (bool, string) {
 	if match == "" {
 		return true, ""
 	} else {
+		fmt.Println("Device id has changed, fetching new one...")
 		return false, fetchScannerId()
 	}
 }

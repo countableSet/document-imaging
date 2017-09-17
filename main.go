@@ -73,7 +73,6 @@ func startScanning(id string) {
 		fmt.Printf(text, page_counter)
 
 		filename := time.Now().Format("20060102150405") + ".tiff"
-		files = append(files, filename)
 
 		scanimage_args := []string{
 			"scanimage", deviceName, "--mode Color",
@@ -84,11 +83,13 @@ func startScanning(id string) {
 		if err != nil {
 			result, newId := verifyScanCommandOutput(err.Error())
 			if !result {
+				removeFile(filename)
 				deviceName = "--device-name '" + newId + "'"
 				continue
 			}
 		}
 
+		files = append(files, filename)
 		continue_scanning = promptUser(r)
 		page_counter++
 	}
@@ -193,8 +194,12 @@ func parseTitleAndDate(filename string) (string, string) {
 func removeIntermediateFiles() {
 	files_to_remove := append(files, scanfiles...)
 	for _, file := range files_to_remove {
-		cmd := exec.Command("rm", "-f", file)
-		runCommand(cmd)
+		removeFile(file)
 	}
 	fmt.Println("Cleanup Done")
+}
+
+func removeFile(f string) {
+	cmd := exec.Command("rm", "-f", f)
+	runCommand(cmd)
 }
