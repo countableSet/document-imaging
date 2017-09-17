@@ -12,7 +12,7 @@ Download the latest deb package from releases and install via commands:
 
 ## Requirements
 
-Install `imagemagick', 'libtiff-tools`, and `sane-utils` on Ubuntu.
+Install `imagemagick`, `libtiff-tools`, and `sane-utils` on Ubuntu.
 
 ## Setup for Legacy Bash Script
 1. Run `scanimage -L`
