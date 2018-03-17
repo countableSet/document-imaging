@@ -25,9 +25,9 @@ var (
 
 // Config struct to store scanner id information
 // should look something like
-// { scannerId: "genesys:libusb:001:011" }
+// { ScannerID: "genesys:libusb:001:011" }
 type config struct {
-	ScannerId string `json:"scannerId"`
+	ScannerID string `json:"ScannerID"`
 }
 
 // Metadata struct to store pdf metadata information
@@ -38,7 +38,7 @@ type metadata struct {
 }
 
 // Fetches the scanner id from the config file, if the id is empty, fetch the id from the command and return that
-func fetchScannerIdFromConfig() string {
+func fetchScannerIDFromConfig() string {
 	usr, _ := user.Current()
 	configFile := usr.HomeDir + string(os.PathSeparator) + configLocation
 	load(configFile, conf)
@@ -73,17 +73,17 @@ func load(configFile string, i interface{}) {
 // otherwise returns id from the config
 func verifyConfig() string {
 	var result string
-	if conf.ScannerId == "" {
-		result = fetchScannerId()
+	if conf.ScannerID == "" {
+		result = fetchScannerID()
 	} else {
-		result = conf.ScannerId
+		result = conf.ScannerID
 	}
 	return result
 }
 
 // Fetches the scanner id from the `scanimage -L` command, write it to the config file and returns it
 // Command output: device `genesys:libusb:001:002' is a Canon LiDE 200 flatbed scanner
-func fetchScannerId() string {
+func fetchScannerID() string {
 	output := runCommandWithOutput(scanImageCmd)
 	if !scanImageRe.MatchString(output) {
 		fmt.Fprintln(os.Stderr, "Cannot find scanner!")
@@ -91,7 +91,7 @@ func fetchScannerId() string {
 	}
 	matches := scanImageRe.FindAllStringSubmatch(output, -1)[0]
 	match := matches[1]
-	conf.ScannerId = match
+	conf.ScannerID = match
 	writeConfigToFile(configLocation, conf)
 	return match
 }
@@ -102,10 +102,9 @@ func verifyScanCommandOutput(output string) (bool, string) {
 	match := scanImageFailRe.FindString(output)
 	if match == "" {
 		return true, ""
-	} else {
-		fmt.Println("Device id has changed, fetching new one...")
-		return false, fetchScannerId()
 	}
+	fmt.Println("Device id has changed, fetching new one...")
+	return false, fetchScannerID()
 }
 
 // Write the conf object to the config file in json format for reference

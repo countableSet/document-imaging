@@ -15,6 +15,9 @@ default: fmt test build
 build:
 	go build ${LDFLAGS}
 
+install:
+	go build -o ${SNAPCRAFT_PART_INSTALL}/bin/${PROJECT} ${LDFLAGS}
+
 package: fmt test build
 	mkdir -p ${PACKAGE_DIR}
 	cp -R debian ${PACKAGE_DIR}

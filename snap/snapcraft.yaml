@@ -1,0 +1,29 @@
+name: document-imaging
+version: v0.3.0
+summary: scans documents
+description: scanning utility written in go using imagemagick, libtiff-tools, and sane-utils
+
+grade: devel
+confinement: devmode
+
+parts:
+  document-imaging:
+    source: .
+    source-tag: 'v0.3.0'
+    plugin: go
+    go-importpath: gitlab.com/countableset/document-imaging
+    build: make fmt test install 
+    stage-packages:
+      - imagemagick
+      - libtiff-tools
+      - sane-utils
+      - usbutils
+
+apps:
+  document-imaging:
+    command: document-imaging
+    plugs:
+      - raw-usb
+    environment:
+      PATH: $PATH:$SNAP/usr/bin
+      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/lib/x86_64-linux-gnu

@@ -14,7 +14,7 @@ var (
 	// BuildDate contains the date of the current build.
 	BuildDate string
 
-	// Version Number contains vX.Y.Z of the current build
+	// VersionNumber contains vX.Y.Z of the current build
 	VersionNumber string
 )
 

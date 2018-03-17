@@ -39,9 +39,9 @@ y`, true},
 
 func TestPromptForFilename(t *testing.T) {
 	var date = time.Now().Format("2006-01-02_")
-	var test_files = []string{date + "existing1.pdf", "2015-01-01existing2.pdf"}
-	helperCreateExistingTestFiles(test_files)
-	defer helperRemoveExistingTestFiles(test_files)
+	var testFiles = []string{date + "existing1.pdf", "2015-01-01existing2.pdf"}
+	helperCreateExistingTestFiles(testFiles)
+	defer helperRemoveExistingTestFiles(testFiles)
 	var tests = []struct {
 		input    string
 		expected string
@@ -84,9 +84,9 @@ func TestVerifyFilenameIncludesDate(t *testing.T) {
 }
 
 func TestVerifyFileNotExist(t *testing.T) {
-	var test_files = []string{"existing1.pdf", "2015-01-01existing2.pdf"}
-	helperCreateExistingTestFiles(test_files)
-	defer helperRemoveExistingTestFiles(test_files)
+	var testFiles = []string{"existing1.pdf", "2015-01-01existing2.pdf"}
+	helperCreateExistingTestFiles(testFiles)
+	defer helperRemoveExistingTestFiles(testFiles)
 	var tests = []struct {
 		input    string
 		expected bool

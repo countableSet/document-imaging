@@ -24,7 +24,7 @@ var (
 
 func main() {
 	flagParsing()
-	id := fetchScannerIdFromConfig()
+	id := fetchScannerIDFromConfig()
 	startScanning(id)
 	filename := promptForFilename(os.Stdin)
 	convertFilesIntoNewTiffFiles()
@@ -66,32 +66,33 @@ func runCommandWithReturnedError(cmd *exec.Cmd) error {
 func startScanning(id string) {
 	deviceName := "--device-name '" + id + "'"
 	r := os.Stdin
-	continue_scanning := true
-	page_counter := 1
+	continueScanning := true
+	pageCounter := 1
 	text := "Scanning page %d\n"
-	for continue_scanning {
-		fmt.Printf(text, page_counter)
+	for continueScanning {
+		fmt.Printf(text, pageCounter)
 
 		filename := time.Now().Format("20060102150405") + ".tiff"
 
-		scanimage_args := []string{
+		scanimageArgs := []string{
 			"scanimage", deviceName, "--mode Color",
 			"--resolution 300 -x 215.9 -y 279.4", "--format=tiff", "-p", ">", filename,
 		}
-		cmd := exec.Command("bash", "-c", strings.Join(scanimage_args, " "))
+		fmt.Println(scanimageArgs)
+		cmd := exec.Command("bash", "-c", strings.Join(scanimageArgs, " "))
 		err := runCommandWithReturnedError(cmd)
 		if err != nil {
-			result, newId := verifyScanCommandOutput(err.Error())
+			result, newID := verifyScanCommandOutput(err.Error())
 			if !result {
 				removeFile(filename)
-				deviceName = "--device-name '" + newId + "'"
+				deviceName = "--device-name '" + newID + "'"
 				continue
 			}
 		}
 
 		files = append(files, filename)
-		continue_scanning = promptUser(r)
-		page_counter++
+		continueScanning = promptUser(r)
+		pageCounter++
 	}
 }
 
@@ -108,7 +109,6 @@ func promptUser(r io.Reader) bool {
 			return false
 		}
 	}
-	return false
 }
 
 func promptForFilename(r io.Reader) string {
@@ -149,16 +149,16 @@ func verifyFileNotExist(filename string) bool {
 func convertFilesIntoNewTiffFiles() {
 	fmt.Println("Converting tiff files into scan files")
 	for i, file := range files {
-		output_filename := fmt.Sprintf("scan%03d.tiff", i+1)
-		scanfiles = append(scanfiles, output_filename)
+		outputFilename := fmt.Sprintf("scan%03d.tiff", i+1)
+		scanfiles = append(scanfiles, outputFilename)
 
-		command_string := []string{
+		commandString := []string{
 			"convert", file, "-shave 15x15 -bordercolor white -border 15",
 			"-deskew 40%", "-background white", "-level 10%,70%,1",
 			"-blur 2", "+dither", "+repage", "+matte", "-compress Group4",
-			"-colorspace gray", "-format tiff", output_filename,
+			"-colorspace gray", "-format tiff", outputFilename,
 		}
-		cmd := exec.Command("bash", "-c", strings.Join(command_string, " "))
+		cmd := exec.Command("bash", "-c", strings.Join(commandString, " "))
 		runCommand(cmd)
 	}
 	fmt.Println("Converting Done")
@@ -192,8 +192,8 @@ func parseTitleAndDate(filename string) (string, string) {
 }
 
 func removeIntermediateFiles() {
-	files_to_remove := append(files, scanfiles...)
-	for _, file := range files_to_remove {
+	filesToRemove := append(files, scanfiles...)
+	for _, file := range filesToRemove {
 		removeFile(file)
 	}
 	fmt.Println("Cleanup Done")

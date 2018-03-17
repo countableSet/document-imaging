@@ -14,16 +14,16 @@ func TestLoad(t *testing.T) {
 		os.Remove(location)
 	}()
 	load(location, conf)
-	if conf.ScannerId != "" {
-		t.Errorf("Expected not nil but got %s", conf.ScannerId)
+	if conf.ScannerID != "" {
+		t.Errorf("Expected not nil but got %s", conf.ScannerID)
 	}
 	id := "test"
-	testConf := config{ScannerId: id}
+	testConf := config{ScannerID: id}
 	jsonOutput, _ := json.Marshal(testConf)
 	ioutil.WriteFile(location, jsonOutput, 0666)
 	load(location, conf)
-	if conf.ScannerId != id {
-		t.Errorf("Expected %s but got %s", id, conf.ScannerId)
+	if conf.ScannerID != id {
+		t.Errorf("Expected %s but got %s", id, conf.ScannerID)
 	}
 }
 
@@ -35,29 +35,29 @@ func TestWriteConfigToFile(t *testing.T) {
 		configLocation = ".config" + string(os.PathSeparator) + "document-imaging" + string(os.PathSeparator) + "scanner.json"
 		os.Remove(location)
 	}()
-	conf.ScannerId = ""
+	conf.ScannerID = ""
 	writeConfigToFile(configLocation, conf)
 	if _, err := os.Stat(location); os.IsNotExist(err) {
 		t.Errorf("Expected path to exist %s", location)
 	}
-	if conf.ScannerId != "" {
-		t.Errorf("Expected empty string but got %s", conf.ScannerId)
+	if conf.ScannerID != "" {
+		t.Errorf("Expected empty string but got %s", conf.ScannerID)
 	}
 	load(location, conf)
-	if conf.ScannerId != "" {
-		t.Errorf("Expected empty string but got %s", conf.ScannerId)
+	if conf.ScannerID != "" {
+		t.Errorf("Expected empty string but got %s", conf.ScannerID)
 	}
 	id := "test"
-	conf.ScannerId = id
+	conf.ScannerID = id
 	writeConfigToFile(configLocation, conf)
 	if _, err := os.Stat(location); os.IsNotExist(err) {
 		t.Errorf("Expected path to exist %s", location)
 	}
-	if conf.ScannerId != id {
-		t.Errorf("Expected %s but got %s", id, conf.ScannerId)
+	if conf.ScannerID != id {
+		t.Errorf("Expected %s but got %s", id, conf.ScannerID)
 	}
 	load(location, conf)
-	if conf.ScannerId != id {
-		t.Errorf("Expected %s but got %s", id, conf.ScannerId)
+	if conf.ScannerID != id {
+		t.Errorf("Expected %s but got %s", id, conf.ScannerID)
 	}
 }
