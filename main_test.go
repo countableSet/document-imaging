@@ -32,7 +32,7 @@ y`, true},
 		r := strings.NewReader(test.input)
 		result := promptUser(r)
 		if result != test.expected {
-			t.Errorf("Expected %s but got %s", test.expected, result)
+			t.Errorf("Expected %t but got %t", test.expected, result)
 		}
 	}
 }
@@ -98,7 +98,7 @@ func TestVerifyFileNotExist(t *testing.T) {
 	for _, test := range tests {
 		result := verifyFileNotExist(test.input)
 		if result != test.expected {
-			t.Errorf("Expected %s but got %s", test.expected, result)
+			t.Errorf("Expected %t but got %t", test.expected, result)
 		}
 	}
 }

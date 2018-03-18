@@ -65,7 +65,7 @@ func load(configFile string, i interface{}) {
 
 	// Parse the config
 	if err := json.Unmarshal(jsonBytes, &i); err != nil {
-		log.Fatalln("Could not parse %q: %v", configFile, err)
+		log.Fatalf("Could not parse %q: %v\n", configFile, err)
 	}
 }
 

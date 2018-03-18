@@ -20,3 +20,16 @@ Now that you have document-imaging installed on your system. It's time to step t
 ## Development Requirements
 
 Install `imagemagick`, `libtiff-tools`, `sane-utils`, `devscripts`, and `dh-make` on Ubuntu.
+
+## Optional Docker Install
+
+0. Compile the code via `make` to build the document-imaging executable file
+1. Build the docker image, `docker build -t docimg .` where docimg is the tag name, you can change that to whatever you'd like.
+2. To run the images, `docker run --rm -t -i --device=/dev/bus/usb/001/009 -v $HOME/Documents/scan:/scan docimg` where docimg is the tag you picked in setup 1.
+  - To find the device path run `lsusb`, where 001 is the bus and 009 is the device
+```
+$ lsusb
+Bus 001 Device 009: ID 04a9:1905 Canon, Inc. CanoScan LiDE 200
+```
+  - The location on the host machine is included in the volume command in this case: `$HOME/Documents/scan`
+3. You can add bash to the end of the run command to not stop the container after every run.
