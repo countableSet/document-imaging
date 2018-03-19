@@ -18,6 +18,12 @@ build:
 install:
 	go build -o ${SNAPCRAFT_PART_INSTALL}/bin/${PROJECT} ${LDFLAGS}
 
+fmt:
+	go fmt
+
+test:
+	go test ./...
+
 package: fmt test build
 	mkdir -p ${PACKAGE_DIR}
 	cp -R debian ${PACKAGE_DIR}
@@ -32,12 +38,18 @@ package: fmt test build
 	cd ${PACKAGE_DIR} && debuild -us -uc -b
 	tar -czf ${PACKAGE_BASEDIR}/${PROJECT}-${PACKAGE_VERSION}-linux-amd64.tar.gz ${PROJECT}
 
-fmt:
-	go fmt
+snap: clean
+	docker run --rm -v $$PWD:$$PWD -w $$PWD snapcore/snapcraft snapcraft
 
-test:
-	go test ./...
+snap-install:
+	sudo snap remove document-imaging
+	sudo snap install document-imaging*.snap --dangerous --devmode
 
 clean:
-	rm -rf ${PROJECT}
+	rm -f ${PROJECT}
 	rm -rf ${PACKAGE_BASEDIR}
+	rm -f ${PROJECT}_v${PACKAGE_VERSION}_amd64.snap
+	rm -f ${PROJECT}_v${PACKAGE_VERSION}_source.tar.bz2
+	sudo rm -rf stage
+	sudo rm -rf prime
+	sudo rm -rf parts

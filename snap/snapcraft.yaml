@@ -12,18 +12,21 @@ parts:
     source-tag: 'v0.3.0'
     plugin: go
     go-importpath: gitlab.com/countableset/document-imaging
-    build: make fmt test install 
+    build: make fmt test install
+    install: |
+      echo "net" > $SNAPCRAFT_PART_INSTALL/etc/sane.d/dll.conf
+      echo "localhost" > $SNAPCRAFT_PART_INSTALL/etc/sane.d/net.conf
+      ln -sf $SNAPCRAFT_PART_INSTALL/usr/bin/convert-im6 $SNAPCRAFT_PART_INSTALL/usr/bin/convert
     stage-packages:
       - imagemagick
       - libtiff-tools
       - sane-utils
-      - usbutils
 
 apps:
   document-imaging:
     command: document-imaging
     plugs:
-      - raw-usb
+      - network
     environment:
-      PATH: $PATH:$SNAP/usr/bin
-      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/lib/x86_64-linux-gnu
+      PATH: $SNAP/usr/bin:$PATH
+      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu/sane
