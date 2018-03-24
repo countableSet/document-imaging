@@ -18,7 +18,7 @@ sudo systemctl restart udev.service
 #### Debugging
 
 - `docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft` : https://docs.snapcraft.io/build-snaps/build-on-lxd-docker
-- `snap run --shell document-imaging.snap`
+- `snap run --shell document-imaging`
 - `snap try`
 
 

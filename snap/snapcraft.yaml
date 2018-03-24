@@ -4,7 +4,7 @@ summary: scans documents
 description: scanning utility written in go using imagemagick, libtiff-tools, and sane-utils
 
 grade: devel
-confinement: devmode
+confinement: strict
 
 parts:
   document-imaging:
@@ -16,17 +16,63 @@ parts:
     install: |
       echo "net" > $SNAPCRAFT_PART_INSTALL/etc/sane.d/dll.conf
       echo "localhost" > $SNAPCRAFT_PART_INSTALL/etc/sane.d/net.conf
-      ln -sf $SNAPCRAFT_PART_INSTALL/usr/bin/convert-im6 $SNAPCRAFT_PART_INSTALL/usr/bin/convert
     stage-packages:
-      - imagemagick
       - libtiff-tools
       - sane-utils
+
+  # sane-utils:
+  #   plugin: autotools
+  #   source: https://gitlab.com/sane-project/backends.git
+  #   source-type: git
+  #   source-tag: RELEASE_1_0_25
+  #   configflags:
+  #     - --sysconfdir=$SNAP/etc
+
+  imagemagick:
+    plugin: autotools
+    source: https://github.com/ImageMagick/ImageMagick.git
+    source-type: git
+    source-tag: 6.9.9-21
+    configflags:
+      - --prefix=/opt
+      - --enable-static=yes
+      - --enable-shared=yes
+      - --disable-docs
+      - --disable-deprecated
+      - --without-autotrace
+      - --without-bzlib
+      - --without-djvu
+      - --without-dps
+      - --without-fftw
+      - --without-fontconfig
+      - --without-fpx
+      - --without-freetype
+      - --without-gvc
+      - --without-jbig
+      - --without-jpeg
+      - --without-lcms
+      - --without-lzma
+      - --without-magick-plus-plus
+      - --without-mpeg
+      - --without-openexr
+      - --without-openjp2
+      - --without-pango
+      - --without-png
+      - --without-raqm
+      - --without-webp
+      - --without-wmf
+      - --without-x
+      - --without-xml
+      - --with-tiff=yes
+    build-packages:
+      - libtiff5-dev
 
 apps:
   document-imaging:
     command: document-imaging
-    plugs:
-      - network
+    plugs: [network, home]
     environment:
-      PATH: $SNAP/usr/bin:$PATH
-      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu/sane
+      PATH: $SNAP/usr/bin:$SNAP/bin:$SNAP/opt/bin:$PATH
+      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu/sane:$SNAP/opt/lib
+      MAGICK_CONFIGURE_PATH: $SNAP/opt/etc/ImageMagick-6:$SNAP/opt/share/ImageMagick-6:$SNAP/opt/lib/ImageMagick-6.9.9/config-Q16
+      MAGICK_HOME: $SNAP/opt

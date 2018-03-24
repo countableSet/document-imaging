@@ -1,20 +1,4 @@
 !GlobalState
 assets:
-  build-packages: [libmpc3=1.0.3-1, manpages=4.04-2, libmpx0=5.4.0-6ubuntu1~16.04.9,
-    libgcc-5-dev=5.4.0-6ubuntu1~16.04.9, linux-libc-dev=4.4.0-116.140, libmpfr4=3.1.4-1,
-    libfakeroot=1.20.2-1ubuntu1, libc6-dev=2.23-0ubuntu10, golang-1.6-go=1.6.2-0ubuntu5~16.04.4,
-    xdg-user-dirs=0.15-2ubuntu6, cpp-5=5.4.0-6ubuntu1~16.04.9, libalgorithm-diff-perl=1.19.03-1,
-    libalgorithm-merge-perl=0.08-3, binutils=2.26.1-1ubuntu1~16.04.6, 'cpp=4:5.3.1-1ubuntu1',
-    libitm1=5.4.0-6ubuntu1~16.04.9, 'g++=4:5.3.1-1ubuntu1', 'gcc=4:5.3.1-1ubuntu1',
-    golang-1.6-race-detector-runtime=0.0+svn252922-0ubuntu1, libcilkrts5=5.4.0-6ubuntu1~16.04.9,
-    libasan2=5.4.0-6ubuntu1~16.04.9, libquadmath0=5.4.0-6ubuntu1~16.04.9, libisl15=0.16.1-1,
-    build-essential=12.1ubuntu2, libfile-fcntllock-perl=0.22-3, golang-1.6-src=1.6.2-0ubuntu5~16.04.4,
-    libstdc++-5-dev=5.4.0-6ubuntu1~16.04.9, libtsan0=5.4.0-6ubuntu1~16.04.9, 'golang-src=2:1.6-1ubuntu4',
-    libubsan0=5.4.0-6ubuntu1~16.04.9, g++-5=5.4.0-6ubuntu1~16.04.9, pkg-config=0.29.1-0ubuntu1,
-    make=4.1-6, fakeroot=1.20.2-1ubuntu1, gcc-5=5.4.0-6ubuntu1~16.04.9, xz-utils=5.1.1alpha+20120614-2ubuntu2,
-    liblsan0=5.4.0-6ubuntu1~16.04.9, shared-mime-info=1.5-2ubuntu0.1, libgomp1=5.4.0-6ubuntu1~16.04.9,
-    'golang-race-detector-runtime=2:1.6-1ubuntu4', manpages-dev=4.04-2, bzip2=1.0.6-8,
-    libglib2.0-data=2.48.2-0ubuntu1, libc-dev-bin=2.23-0ubuntu10, libatomic1=5.4.0-6ubuntu1~16.04.9,
-    libcc1-0=5.4.0-6ubuntu1~16.04.9, libdpkg-perl=1.18.4ubuntu1.4, libalgorithm-diff-xs-perl=0.04-4build1,
-    libglib2.0-0=2.48.2-0ubuntu1, 'golang-go=2:1.6-1ubuntu4', dpkg-dev=1.18.4ubuntu1.4]
+  build-packages: []
   build-snaps: []

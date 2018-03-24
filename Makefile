@@ -41,9 +41,12 @@ package: fmt test build
 snap: clean
 	docker run --rm -v $$PWD:$$PWD -w $$PWD snapcore/snapcraft snapcraft
 
+snap-interactive: clean
+	docker run --rm -t -i -v $$PWD:$$PWD -w $$PWD snapcore/snapcraft bash
+
 snap-install:
 	sudo snap remove document-imaging
-	sudo snap install document-imaging*.snap --dangerous --devmode
+	sudo snap install document-imaging*.snap --dangerous
 
 clean:
 	rm -f ${PROJECT}
