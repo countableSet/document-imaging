@@ -27,3 +27,7 @@ device `net:localhost:genesys:libusb:001:002' is a Canon LiDE 200 flatbed scanne
 ```
 
 SANE_DEBUG_DLL=4 scanimage -L
+
+
+SANE_CONFIG_DIR
+See: https://gitlab.com/sane-project/backends/blob/RELEASE_1_0_25/sanei/sanei_config.c#L92

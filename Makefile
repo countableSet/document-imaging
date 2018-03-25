@@ -47,6 +47,10 @@ snap-interactive: clean
 snap-install:
 	sudo snap remove document-imaging
 	sudo snap install document-imaging*.snap --dangerous
+	sudo snap connect document-imaging:raw-usb
+
+snap-shell:
+	snap run --shell document-imaging
 
 clean:
 	rm -f ${PROJECT}

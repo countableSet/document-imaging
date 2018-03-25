@@ -13,23 +13,25 @@ parts:
     plugin: go
     go-importpath: gitlab.com/countableset/document-imaging
     build: make fmt test install
-    install: |
-      echo "net" > $SNAPCRAFT_PART_INSTALL/etc/sane.d/dll.conf
-      echo "localhost" > $SNAPCRAFT_PART_INSTALL/etc/sane.d/net.conf
+    # install: |
+    #   echo "net\ngenesys" > $SNAPCRAFT_PART_INSTALL/etc/sane.d/dll.conf
+    #   echo "localhost" > $SNAPCRAFT_PART_INSTALL/etc/sane.d/net.conf
     stage-packages:
       - libtiff-tools
-      - sane-utils
+      # - sane-utils
 
-  # sane-utils:
-  #   plugin: autotools
-  #   source: https://gitlab.com/sane-project/backends.git
-  #   source-type: git
-  #   source-tag: RELEASE_1_0_25
-  #   configflags:
-  #     - --prefix=/opt/sane-utils
-  #   install: |
-  #     echo "net" > $SNAPCRAFT_PART_INSTALL/opt/sane-utils/etc/sane.d/dll.conf
-  #     echo "localhost" > $SNAPCRAFT_PART_INSTALL/opt/sane-utils/etc/sane.d/net.conf
+  sane-utils:
+    plugin: autotools
+    source: https://gitlab.com/sane-project/backends.git
+    source-type: git
+    source-tag: RELEASE_1_0_25
+    configflags:
+      - --prefix=/opt/sane-utils
+    install: |
+      echo "net\ngenesys" > $SNAPCRAFT_PART_INSTALL/opt/sane-utils/etc/sane.d/dll.conf
+      echo "localhost" > $SNAPCRAFT_PART_INSTALL/opt/sane-utils/etc/sane.d/net.conf
+    build-packages:
+      - libusb-dev
 
   imagemagick:
     plugin: autotools
@@ -73,14 +75,14 @@ parts:
 apps:
   document-imaging:
     command: document-imaging
-    plugs: [network, home]
+    plugs: [network, home, raw-usb]
     environment:
-      # PATH: $SNAP/usr/bin:$SNAP/bin:$SNAP/opt/imagemagick/bin:$SNAP/opt/sane-utils/bin:$PATH
-      PATH: $SNAP/usr/bin:$SNAP/bin:$SNAP/opt/imagemagick/bin:$PATH
-      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu/sane:$SNAP/opt/imagemagick/lib
-      # LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/opt/sane-utils/lib:$SNAP/opt/sane-utils/lib/sane:$SNAP/opt/imagemagick/lib
+      PATH: $SNAP/usr/bin:$SNAP/bin:$SNAP/opt/imagemagick/bin:$SNAP/opt/sane-utils/bin:$PATH
+      # PATH: $SNAP/usr/bin:$SNAP/bin:$SNAP/opt/imagemagick/bin:$PATH
+      # LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/lib/x86_64-linux-gnu:$SNAP/usr/lib/x86_64-linux-gnu/sane:$SNAP/opt/imagemagick/lib
+      LD_LIBRARY_PATH: $SNAP/usr/lib/x86_64-linux-gnu:$SNAP/opt/sane-utils/lib:$SNAP/opt/sane-utils/lib/sane:$SNAP/opt/imagemagick/lib
       MAGICK_CONFIGURE_PATH: $SNAP/opt/imagemagick/etc/ImageMagick-6:$SNAP/opt/imagemagick/share/ImageMagick-6:$SNAP/opt/imagemagick/lib/ImageMagick-6.9.9/config-Q16
       MAGICK_HOME: $SNAP/opt/imagemagick
-      # SANE_CONFIG_DIR: $SNAP/opt/sane-utils/etc/sane.d
-      SANE_CONFIG_DIR: $SNAP/etc/sane.d
+      SANE_CONFIG_DIR: $SNAP/opt/sane-utils/etc/sane.d
+      # SANE_CONFIG_DIR: $SNAP/etc/sane.d
       DOCUMENT_CONFIG_HOME: $SNAP_USER_DATA
