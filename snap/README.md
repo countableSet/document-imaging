@@ -19,7 +19,6 @@ sudo systemctl restart udev.service
 
 - `docker run -v $PWD:$PWD -w $PWD snapcore/snapcraft snapcraft` : https://docs.snapcraft.io/build-snaps/build-on-lxd-docker
 - `snap run --shell document-imaging`
-- `snap try`
 
 
 Should look something like:
@@ -27,4 +26,4 @@ Should look something like:
 device `net:localhost:genesys:libusb:001:002' is a Canon LiDE 200 flatbed scanner
 ```
 
-SANE_DEBUG_DLL=3 scanimage -L
+SANE_DEBUG_DLL=4 scanimage -L

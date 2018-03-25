@@ -39,10 +39,9 @@ type metadata struct {
 
 // Fetches the scanner id from the config file, if the id is empty, fetch the id from the command and return that
 func fetchScannerIDFromConfig() string {
-	usr, _ := user.Current()
-	configFile := usr.HomeDir + string(os.PathSeparator) + configLocation
+	configFile := getHomeDir() + string(os.PathSeparator) + configLocation
 	load(configFile, conf)
-	configFile = usr.HomeDir + string(os.PathSeparator) + metadataLocation
+	configFile = getHomeDir() + string(os.PathSeparator) + metadataLocation
 	load(configFile, meta)
 	return verifyConfig()
 }
@@ -114,17 +113,25 @@ func writeConfigToFile(fileLocation string, i interface{}) {
 		fmt.Fprintln(os.Stderr, "Cannot marshal config json!", err)
 		os.Exit(1)
 	}
-	usr, _ := user.Current()
-	path := usr.HomeDir + string(os.PathSeparator) + configPath
+	path := getHomeDir() + string(os.PathSeparator) + configPath
 	err = os.MkdirAll(path, 0777)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error create path directories!", err)
 		os.Exit(1)
 	}
-	configFile := usr.HomeDir + string(os.PathSeparator) + fileLocation
+	configFile := getHomeDir() + string(os.PathSeparator) + fileLocation
 	err = ioutil.WriteFile(configFile, jsonOutput, 0666)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error writing to config json file!", err)
 		os.Exit(1)
 	}
+}
+
+func getHomeDir() string {
+	home := os.Getenv("DOCUMENT_CONFIG_HOME")
+	if home == "" {
+		usr, _ := user.Current()
+		home = usr.HomeDir
+	}
+	return home
 }
