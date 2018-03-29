@@ -78,7 +78,6 @@ func startScanning(id string) {
 			"scanimage", deviceName, "--mode Color",
 			"--resolution 300 -x 215.9 -y 279.4", "--format=tiff", "-p", ">", filename,
 		}
-		fmt.Println(scanimageArgs)
 		cmd := exec.Command("bash", "-c", strings.Join(scanimageArgs, " "))
 		err := runCommandWithReturnedError(cmd)
 		if err != nil {
