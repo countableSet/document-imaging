@@ -32,3 +32,6 @@ snap_package_job:
   stage: snap
   script:
   - snapcraft
+  - mkdir -p .snapcraft
+  - openssl aes-256-cbc -d -in snap/snapcraft.encrypted -out .snapcraft/snapcraft.cfg -k $SNAPCRAFT_KEY
+  - snapcraft push *.snap
