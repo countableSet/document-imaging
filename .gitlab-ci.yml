@@ -1,21 +1,34 @@
-image: golang:latest
+image: docker:latest
+
+variables:
+  DOCKER_DRIVER: overlay
 
 before_script:
-    - mkdir -p /go/src/gitlab.com/countableset/document-imaging
-    - cp -r /builds/countableset/document-imaging/ /go/src/gitlab.com/countableset/
-    - cd /go/src/gitlab.com/countableset/document-imaging
+  - mkdir -p /go/src/gitlab.com/countableset/document-imaging
+  - cp -r /builds/countableset/document-imaging/ /go/src/gitlab.com/countableset/
+  - cd /go/src/gitlab.com/countableset/document-imaging
 
 stages:
-    - build
+  - build
+  - package
+  - snap
 
-default:
-    stage: build
-    script:
-        - make
+build_job:
+  image: golang:latest
+  stage: build
+  script:
+  - make
 
-package:
-    stage: build
-    script:
-        - apt-get update
-        - apt-get install -y devscripts build-essential
-        - make package
+deb_package_job:
+  image: golang:latest
+  stage: package
+  script:
+  - apt-get update
+  - apt-get install -y devscripts build-essential
+  - make package
+
+snap_package_job:
+  image: snapcore/snapcraft:latest
+  stage: snap
+  script:
+  - snapcraft
