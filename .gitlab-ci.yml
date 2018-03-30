@@ -36,5 +36,6 @@ snap_package_job:
   - openssl aes-256-cbc -d -in snap/snapcraft.encrypted -out .snapcraft/snapcraft.cfg -k $SNAPCRAFT_KEY
   - snapcraft push *.snap
   - snapcraft list-revisions document-imaging
-  - snapcraft list-revisions document-imaging | sed -n '2 p' | awk 'END {print $1}'
-  - snapcraft release document-imaging $(snapcraft list-revisions document-imaging | sed -n '2 p' | awk 'END {print $1}') edge
+  - REV=$(snapcraft list-revisions document-imaging | sed -n '3 p' | awk 'END {print $1}')
+  - echo $REV
+  - snapcraft release document-imaging $REV edge
