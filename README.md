@@ -10,6 +10,11 @@ Download the latest deb package from releases and install via commands:
 2. `sudo apt-get install -f` if the dependencies aren't already installed
 3. `sudo dpkg -i document-imaging.deb` run install again, if dependencies were missing
 
+## Snap Package Installation
+
+1. `sudo snap install document-imaging --edge`
+2. `sudo snap connect document-imaging:raw-usb`
+
 ## First-Time Setup
 
 Now that you have document-imaging installed on your system. It's time to step the metadata configuration.
