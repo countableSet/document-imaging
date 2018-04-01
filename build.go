@@ -25,7 +25,7 @@ var (
 
 func flagParsing() {
 	version = flag.Bool("v", false, "Print the version number")
-	author = flag.String("a", "", "Configure metadata information for author and creator fields")
+	author = flag.String("a", "", "Configure metadata information for author and creator fields (e.g. -a \"Your Name\")")
 	flag.Parse()
 	outputVersionInfo()
 	saveMetadataInfo()
