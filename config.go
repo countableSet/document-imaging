@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	configLocation   = ".config" + string(os.PathSeparator) + "document-imaging" + string(os.PathSeparator) + "scanner.json"
-	configPath       = ".config" + string(os.PathSeparator) + "document-imaging"
-	metadataLocation = ".config" + string(os.PathSeparator) + "document-imaging" + string(os.PathSeparator) + "metadata.json"
+	homeDirSubPath   = string(os.PathSeparator) + ".config" + string(os.PathSeparator) + "document-imaging"
+	configLocation   = "scanner.json"
+	metadataLocation = "metadata.json"
 	conf             = &config{}
 	meta             = &metadata{}
 	scanImageCmd     = exec.Command("scanimage", "-L")
@@ -39,9 +39,9 @@ type metadata struct {
 
 // Fetches the scanner id from the config file, if the id is empty, fetch the id from the command and return that
 func fetchScannerIDFromConfig() string {
-	configFile := getHomeDir() + string(os.PathSeparator) + configLocation
+	configFile := getConfigBasePath() + string(os.PathSeparator) + configLocation
 	load(configFile, conf)
-	configFile = getHomeDir() + string(os.PathSeparator) + metadataLocation
+	configFile = getConfigBasePath() + string(os.PathSeparator) + metadataLocation
 	load(configFile, meta)
 	return verifyConfig()
 }
@@ -113,13 +113,13 @@ func writeConfigToFile(fileLocation string, i interface{}) {
 		fmt.Fprintln(os.Stderr, "Cannot marshal config json!", err)
 		os.Exit(1)
 	}
-	path := getHomeDir() + string(os.PathSeparator) + configPath
+	path := getConfigBasePath()
 	err = os.MkdirAll(path, 0777)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error create path directories!", err)
 		os.Exit(1)
 	}
-	configFile := getHomeDir() + string(os.PathSeparator) + fileLocation
+	configFile := getConfigBasePath() + string(os.PathSeparator) + fileLocation
 	err = ioutil.WriteFile(configFile, jsonOutput, 0666)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error writing to config json file!", err)
@@ -127,11 +127,11 @@ func writeConfigToFile(fileLocation string, i interface{}) {
 	}
 }
 
-func getHomeDir() string {
-	home := os.Getenv("DOCUMENT_CONFIG_HOME")
-	if home == "" {
+func getConfigBasePath() string {
+	path := os.Getenv("DOCUMENT_CONFIG_HOME")
+	if path == "" {
 		usr, _ := user.Current()
-		home = usr.HomeDir
+		path = usr.HomeDir + homeDirSubPath
 	}
-	return home
+	return path
 }

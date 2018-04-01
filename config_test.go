@@ -29,8 +29,8 @@ func TestLoad(t *testing.T) {
 
 func TestWriteConfigToFile(t *testing.T) {
 	usr, _ := user.Current()
-	configLocation = ".config" + string(os.PathSeparator) + "document-imaging" + string(os.PathSeparator) + "scanner-testing.json"
-	location := usr.HomeDir + string(os.PathSeparator) + configLocation
+	configLocation = "scanner-testing.json"
+	location := usr.HomeDir + homeDirSubPath + string(os.PathSeparator) + configLocation
 	defer func() {
 		configLocation = ".config" + string(os.PathSeparator) + "document-imaging" + string(os.PathSeparator) + "scanner.json"
 		os.Remove(location)

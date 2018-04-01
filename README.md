@@ -21,7 +21,7 @@ Now that you have document-imaging installed on your system. It's time to step t
 
 1. See the `-h` flag for usage information
 2. Usage the `-a "Your Name"` flag to configure author information
-  - This creates the metadata file in `$HOME/.config/document-imaging/metadata.json` or in the snap case `$SNAP_USER_DATA/.config/document-imaging/metadata.json`
+  - This creates the metadata file in `$HOME/.config/document-imaging/metadata.json` or in the snap case `$SNAP_USER_DATA/metadata.json`
   - The content should include the author information in json format; `{ author: "user" }`
 
 ## Development Requirements
