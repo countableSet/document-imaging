@@ -165,7 +165,7 @@ func convertFilesIntoNewTiffFiles() {
 
 func createFinalPdfDocument(filename string) {
 	fmt.Println("Converting tiff scans to pdf")
-	pdfName := filename + ".pdf"
+	pdfName := normalizedFilename(filename) + ".pdf"
 	scanfiles = append(scanfiles, "doc.tiff")
 	cmd := exec.Command("tiffcp", scanfiles...)
 	runCommand(cmd)
@@ -188,6 +188,12 @@ func parseTitleAndDate(filename string) (string, string) {
 		title = titlere.FindAllStringSubmatch(title, -1)[0][2]
 	}
 	return title, date
+}
+
+func normalizedFilename(filename string) string {
+	lowered := strings.ToLower(filename)
+	replaced := strings.Replace(lowered, " ", "_", -1)
+	return replaced
 }
 
 func removeIntermediateFiles() {

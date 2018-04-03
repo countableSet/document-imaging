@@ -128,6 +128,28 @@ func TestParseTitleAndDate(t *testing.T) {
 	}
 }
 
+func TestNormalizeFilename(t *testing.T) {
+	var tests = []struct {
+		input            string
+		expectedFilename string
+	}{
+		{"2018-01-01_unittest1", "2018-01-01_unittest1"},
+		{"2018-01-01_unit test with spaces", "2018-01-01_unit_test_with_spaces"},
+		{"2018-01_unittest2", "2018-01_unittest2"},
+		{"2018-01 unit test with spaces2", "2018-01_unit_test_with_spaces2"},
+		{"2018-01-01_UNITtest1", "2018-01-01_unittest1"},
+		{"2018-01-01_UNit test WITH Spaces", "2018-01-01_unit_test_with_spaces"},
+		{"2018-01_UNITtest2", "2018-01_unittest2"},
+		{"2018-01 Unit Test With Spaces2", "2018-01_unit_test_with_spaces2"},
+	}
+	for _, test := range tests {
+		resultFilename := normalizedFilename(test.input)
+		if resultFilename != test.expectedFilename {
+			t.Errorf("Expected %s but got %s", test.expectedFilename, resultFilename)
+		}
+	}
+}
+
 func helperCreateExistingTestFiles(files []string) {
 	for _, file := range files {
 		cmd := exec.Command("bash", "-c", "touch "+file)
