@@ -14,7 +14,7 @@ stages:
   - snap
 
 build_job:
-  image: golang:1.11-alpine
+  image: golang:1.11-stretch
   stage: build
   script:
   - make
