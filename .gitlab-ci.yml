@@ -14,13 +14,13 @@ stages:
   - snap
 
 build_job:
-  image: golang:latest
+  image: golang:1.11-alpine
   stage: build
   script:
   - make
 
 deb_package_job:
-  image: golang:latest
+  image: golang:1.11-stretch
   stage: package
   script:
   - apt-get update

@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  document-imaging:
+    build:
+      context: .
+      dockerfile: ./docker/Dev.Dockerfile
+    container_name: document-dev
+    volumes:
+      - .:/document-imaging:cached
+    devices:
+      - /dev/bus/usb/${BUS}/${DEVICE}
+    stdin_open: true
+    tty: true
+    privileged: true
