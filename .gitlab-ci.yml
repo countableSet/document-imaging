@@ -1,37 +1,57 @@
-image: docker:latest
-
-variables:
-  DOCKER_DRIVER: overlay
-
-before_script:
-  - mkdir -p /go/src/gitlab.com/countableset/document-imaging
-  - cp -r /builds/countableset/document-imaging/ /go/src/gitlab.com/countableset/
-  - cd /go/src/gitlab.com/countableset/document-imaging
+.job_template: &fix_gopath
+  before_script:
+    # Create a symlink under $GOPATH, this is needed for local build
+    - cd $GOPATH/src
+    - mkdir -p gitlab.com/$CI_PROJECT_NAMESPACE
+    - cd gitlab.com/$CI_PROJECT_NAMESPACE
+    - ln -s $CI_PROJECT_DIR
+    - cd $CI_PROJECT_NAME
 
 stages:
   - build
   - package
-  - snap
+  - deploy
 
 build_job:
+  <<: *fix_gopath
   image: golang:1.11-stretch
   stage: build
   script:
   - make
+  artifacts:
+    paths:
+      - document-imaging
 
 deb_package_job:
+  <<: *fix_gopath
   image: golang:1.11-stretch
   stage: package
   script:
   - apt-get update
   - apt-get install -y devscripts build-essential
   - make package
+  artifacts:
+    paths:
+      - package/*.deb
+      - package/*.tar.gz
 
 snap_package_job:
   image: snapcore/snapcraft:latest
-  stage: snap
+  stage: package
+  before_script:
+  - apt-get update
   script:
   - snapcraft
+  artifacts:
+    paths:
+      - document-imaging*.snap
+
+snap_deploy_job:
+  image: snapcore/snapcraft:latest
+  stage: deploy
+  before_script:
+  - apt-get update
+  script:
   - mkdir -p .snapcraft
   - openssl aes-256-cbc -d -in snap/snapcraft.encrypted -out .snapcraft/snapcraft.cfg -k $SNAPCRAFT_KEY
   - snapcraft push *.snap
@@ -39,3 +59,7 @@ snap_package_job:
   - REV=$(snapcraft list-revisions document-imaging | sed -n '3 p' | awk 'END {print $1}')
   - echo $REV
   - snapcraft release document-imaging $REV edge
+  dependencies:
+    - snap_package_job
+  only:
+    - master

@@ -7,6 +7,7 @@ services:
     container_name: document-dev
     volumes:
       - .:/document-imaging:cached
+      - $HOME/.gitconfig:/root/.gitconfig:ro
     devices:
       - /dev/bus/usb/${BUS}/${DEVICE}
     stdin_open: true

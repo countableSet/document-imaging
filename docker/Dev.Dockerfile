@@ -1,14 +1,15 @@
 FROM snapcore/snapcraft:latest
+LABEL maintainer="r@countableset.com"
 
 # Install tools and libraries
 RUN apt-get update && \
     apt-get install -y \
-    imagemagick \
-    libtiff-tools \
-    sane-utils \
-    devscripts \
-    dh-make \
-    wget
+        imagemagick \
+        libtiff-tools \
+        sane-utils \
+        devscripts \
+        dh-make \
+        wget
 
 # Install Golang
 ENV GOLANG_VERSION 1.11.2
