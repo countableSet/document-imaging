@@ -53,7 +53,7 @@ snap_deploy_job:
   - apt-get update
   script:
   - mkdir -p .snapcraft
-  - openssl aes-256-cbc -d -in snap/snapcraft.encrypted -out .snapcraft/snapcraft.cfg -k $SNAPCRAFT_KEY
+  - echo $SNAPCRAFT_KEY | base64 --decode --ignore-garbage > .snapcraft/snapcraft.cfg
   - snapcraft push *.snap
   - snapcraft list-revisions document-imaging
   - REV=$(snapcraft list-revisions document-imaging | sed -n '3 p' | awk 'END {print $1}')
