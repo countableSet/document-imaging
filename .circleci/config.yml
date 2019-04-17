@@ -16,6 +16,7 @@ jobs:
   build-deb:
     docker:
       - image: golang:1.11-stretch
+    working_directory: /go/src/github.com/countableset/document-imaging
     steps:
       - checkout
       - run:
@@ -37,8 +38,8 @@ jobs:
       - run: apt-get update
       - run: snapcraft
       - store_artifacts:
-          path: "*.snap"
-          destination: snap
+          path: document-imaging*.snap
+          destination: document-imaging.snap
       - persist_to_workspace:
           root: .
           paths:
