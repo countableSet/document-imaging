@@ -46,7 +46,7 @@ jobs:
   # snap publishing
   deploy-snap:
     docker:
-      - image: cibuilds/snapcraft:stable
+      - image: snapcore/snapcraft:latest
     steps:
       - attach_workspace:
           at: .
