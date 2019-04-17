@@ -1,0 +1,80 @@
+version: 2.1
+jobs:
+  # go project build
+  build:
+    docker:
+      - image: golang:1.11-stretch
+    working_directory: /go/src/github.com/countableset/document-imaging
+    steps:
+      - checkout
+      - run: make
+      - store_artifacts:
+          path: document-imaging
+          destination: document-imaging
+
+  # debian packing
+  build-deb:
+    docker:
+      - image: golang:1.11-stretch
+    steps:
+      - checkout
+      - run:
+          name: "Install Dependencies"
+          command: |
+            apt-get update
+            apt-get install -y devscripts build-essential
+      - run: make package
+      - store_artifacts:
+          path: package/*.deb
+          destination: package
+
+  # snap build
+  build-snap:
+    docker:
+      - image: cibuilds/snapcraft:stable
+    steps:
+      - checkout
+      - run: snapcraft
+      - store_artifacts:
+          path: "*.snap"
+          destination: snap
+      - persist_to_workspace:
+          root: .
+          paths:
+            - "*.snap"
+
+  # snap publishing
+  deploy-snap:
+    docker:
+      - image: cibuilds/snapcraft:stable
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: "Publish to Snapscraft"
+          command: |
+            mkdir .snapcraft
+            echo $SNAPCRAFT_KEY | base64 --decode --ignore-garbage > .snapcraft/snapcraft.cfg
+            snapcraft push *.snap
+            snapcraft list-revisions document-imaging
+            REV=$(snapcraft list-revisions document-imaging | sed -n '3 p' | awk 'END {print $1}')
+            echo $REV
+            snapcraft release document-imaging $REV edge
+
+workflows:
+  version: 2
+  publish:
+    jobs:
+      - build
+      - build-deb:
+          requires:
+            - build
+      - build-snap:
+          requires:
+            - build
+      # - deploy-snap:
+      #     requires:
+      #       - build-snap
+      #     filters:
+      #       branches:
+      #         only: master
