@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: document-imaging
-Source: https://gitlab.com/countableset/document-imaging
+Source: https://github.com/countableset/document-imaging
 Files: debian/*
 Copyright: 2016 countableset <r@countableset.com>
 License: GPL-2+

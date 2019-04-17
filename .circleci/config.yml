@@ -26,8 +26,7 @@ jobs:
             apt-get install -y devscripts build-essential
       - run: make package
       - store_artifacts:
-          path: package/*.deb
-          destination: package
+          path: package
 
   # snap build
   build-snap:
@@ -37,13 +36,17 @@ jobs:
       - checkout
       - run: apt-get update
       - run: snapcraft
+      - run:
+          name: "Copy snap for artifacts"
+          command: |
+            mkdir package
+            cp document-imaging*.snap package/
       - store_artifacts:
-          path: document-imaging*.snap
-          destination: document-imaging.snap
+          path: package
       - persist_to_workspace:
           root: .
           paths:
-            - "*.snap"
+            - document-imaging*.snap
 
   # snap publishing
   deploy-snap:
