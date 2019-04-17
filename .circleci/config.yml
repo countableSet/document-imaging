@@ -31,9 +31,10 @@ jobs:
   # snap build
   build-snap:
     docker:
-      - image: cibuilds/snapcraft:stable
+      - image: snapcore/snapcraft:latest
     steps:
       - checkout
+      - run: apt-get update
       - run: snapcraft
       - store_artifacts:
           path: "*.snap"
@@ -50,6 +51,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: apt-get update
       - run:
           name: "Publish to Snapscraft"
           command: |
@@ -63,7 +65,7 @@ jobs:
 
 workflows:
   version: 2
-  publish:
+  build-and-package:
     jobs:
       - build
       - build-deb:
