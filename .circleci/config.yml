@@ -27,6 +27,7 @@ jobs:
       - run: make package
       - store_artifacts:
           path: package
+          destination: package
 
   # snap build
   build-snap:
@@ -43,10 +44,11 @@ jobs:
             cp document-imaging*.snap package/
       - store_artifacts:
           path: package
+          destination: package
       - persist_to_workspace:
           root: .
           paths:
-            - document-imaging*.snap
+            - package
 
   # snap publishing
   deploy-snap:
@@ -55,6 +57,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: mv package/*.snap .
       - run: apt-get update
       - run:
           name: "Publish to Snapscraft"
@@ -78,9 +81,9 @@ workflows:
       - build-snap:
           requires:
             - build
-      # - deploy-snap:
-      #     requires:
-      #       - build-snap
-      #     filters:
-      #       branches:
-      #         only: master
+      - deploy-snap:
+          requires:
+            - build-snap
+          filters:
+            branches:
+              only: master
