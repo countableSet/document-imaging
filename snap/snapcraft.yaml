@@ -14,7 +14,7 @@ parts:
     source: .
     source-tag: 'v0.3.0'
     plugin: go
-    go-importpath: gitlab.com/countableset/document-imaging
+    go-importpath: github.com/countableset/document-imaging
     override-build: |
       go version
       make fmt test install
